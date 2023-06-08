@@ -177,6 +177,8 @@ bot.on('callback_query', async (ctx) => {
 
 bot.launch().catch((e) => {
     console.log('GOT BOT ERROR', e)
+    process.exit(1)
+
 })
 
 
