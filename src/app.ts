@@ -175,7 +175,9 @@ bot.on('callback_query', async (ctx) => {
 
 });
 
-bot.launch();
+bot.launch().catch((e) => {
+    console.log('GOT BOT ERROR', e)
+})
 
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
