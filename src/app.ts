@@ -175,22 +175,9 @@ bot.on('callback_query', async (ctx) => {
 
 });
 
-const run = () => {
-    console.log(new Date(), 'Started')
-    bot.launch();
-
-}
+bot.launch();
 
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
 
-while (true) {
-    try {
-        run()
-
-    } catch (e) {
-        console.log(e)
-        console.log('Restarting...')
-    }
-}
