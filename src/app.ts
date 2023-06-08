@@ -15,7 +15,13 @@ import {storage} from "./storage";
 
 const bot: Telegraf<Context<Update>> = new Telegraf(process.env.BOT_TOKEN as string);
 
-bot.start((ctx) => ctx.reply('Welcome' + ctx.from.first_name));
+bot.start(async (ctx) => {
+    ctx.reply('Welcome ' + ctx.from.first_name)
+    if (!(await storage.knownPersonsHas(ctx.from.id))) {
+        ctx.reply("You are NOT in the list of known persons, you can't use this bot, sorry")
+        return
+    }
+});
 
 
 const getApi = () => {
@@ -64,7 +70,7 @@ bot.command('ping', async (ctx) => {
 bot.command('imagine', async (ctx) => {
 
     if (!(await storage.knownPersonsHas(ctx.from.id))) {
-        ctx.reply('You are NOT in the list of known persons, you can use this bot, sotty')
+        ctx.reply('You are NOT in the list of known persons, you can use this bot, sorry')
         return
     }
 
