@@ -1,4 +1,5 @@
 import {Context, Input, Markup, Telegraf} from 'telegraf';
+
 import {Update} from 'typegram';
 import {config} from "dotenv";
 
@@ -11,6 +12,7 @@ import {MJMessage} from "midjourney";
 import * as fs from "fs";
 
 import {storage} from "./storage";
+import {InlineKeyboardMarkup} from "telegraf/src/core/types/typegram";
 
 
 const bot: Telegraf<Context<Update>> = new Telegraf(process.env.BOT_TOKEN as string);
@@ -41,29 +43,41 @@ const processMessage = async (ctx: Context<Update>, msg: string) => {
     }
 }
 
+const createMarkupTable = (msgId: string): Markup.Markup<InlineKeyboardMarkup> => {
+    return Markup.inlineKeyboard([
+        [
+            Markup.button.callback("U1", `${msgId}:U1`),
+            Markup.button.callback("U2", `${msgId}:U2`),
+            Markup.button.callback("U3", `${msgId}:U3`),
+            Markup.button.callback("U4", `${msgId}:U4`),
+        ], [
+            Markup.button.callback("V1", `${msgId}:V1`),
+            Markup.button.callback("V2", `${msgId}:V2`),
+            Markup.button.callback("V3", `${msgId}:V3`),
+            Markup.button.callback("V4", `${msgId}:V4`),
+
+        ]
+    ])
+}
+
 const sendImageWithButtons = async (ctx: Context<Update>, msg: MJMessage, caption?: string) => {
     storage.cacheMessage(msg)
 
     const file = await downloadImage(msg.uri)
     console.log('sending photo with caption:', caption)
-    await ctx.replyWithPhoto(Input.fromLocalFile(file), {
-        // caption,
-        ...Markup.inlineKeyboard([
-            [
-                Markup.button.callback("U1", `${msg.id}:U1`),
-                Markup.button.callback("U2", `${msg.id}:U2`),
-                Markup.button.callback("U3", `${msg.id}:U3`),
-                Markup.button.callback("U4", `${msg.id}:U4`),
-            ], [
-                Markup.button.callback("V1", `${msg.id}:V1`),
-                Markup.button.callback("V2", `${msg.id}:V2`),
-                Markup.button.callback("V3", `${msg.id}:V3`),
-                Markup.button.callback("V4", `${msg.id}:V4`),
+    console.log(msg.uri)
+    try {
+        await ctx.replyWithPhoto(Input.fromLocalFile(file), {
+            ...createMarkupTable(msg.id!),
 
-            ]
-        ])
+        })
+    } catch (e) {
+        console.log("Can't send image", e)
+        await ctx.replyWithHTML('Can\'t upload image, sorry, here is the link:' + msg.uri, {
+            ...createMarkupTable(msg.id!),
+        })
 
-    })
+    }
 
     fs.unlinkSync(file)
 }
@@ -160,9 +174,23 @@ bot.on('callback_query', async (ctx) => {
     }
 
 });
-bot.launch();
+
+const run = () => {
+    console.log(new Date(), 'Started')
+    bot.launch();
+
+}
 
 
-// process.once('SIGINT', () => bot.stop('SIGINT'));
-// process.once('SIGTERM', () => bot.stop('SIGTERM'))
-console.log(new Date(), 'Started')
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'))
+
+while (true) {
+    try {
+        run()
+
+    } catch (e) {
+        console.log(e)
+        console.log('Restarting...')
+    }
+}
