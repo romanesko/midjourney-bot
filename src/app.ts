@@ -70,7 +70,7 @@ bot.command('imagine', async (ctx) => {
 
     const prompt = ctx.update.message?.text.slice(9)
     if (!prompt) {
-        ctx.reply('You should provide prompt, like /imagine cat')
+        ctx.reply('You should provide prompt, like */imagine cat flying in the clouds in the style of Edward Tufte*', {parse_mode: 'MarkdownV2'})
         return
     }
     console.log('PROMPT:', prompt)
