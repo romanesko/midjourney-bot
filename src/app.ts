@@ -4,8 +4,8 @@ import {config} from "dotenv";
 
 config()
 
-// import {Api} from './api'
-import {Api} from './dummy_api'
+import {Api} from './api'
+// import {Api} from './dummy_api'
 import {downloadImage} from "./utils";
 import {MJMessage} from "midjourney";
 import * as fs from "fs";

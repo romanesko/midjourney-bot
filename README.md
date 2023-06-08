@@ -11,4 +11,12 @@ REDIS_HOST=
 REDIS_PORT=
 REDIS_PASSWORD=
 AUTH_PASSWORD=
+```
 
+### RUN
+
+```bash
+npm install pm2 -g
+cd dist
+pm2 start app.js
+```
