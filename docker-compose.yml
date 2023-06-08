@@ -1,0 +1,9 @@
+services:
+  bot:
+    build: .
+    container_name: midjourney_bot
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+

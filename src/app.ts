@@ -57,6 +57,9 @@ bot.command('auth', async (ctx) => {
     ctx.reply('You can use /imagine now')
 })
 
+bot.command('ping', async (ctx) => {
+    ctx.reply('pong')
+})
 
 bot.command('imagine', async (ctx) => {
 
@@ -139,3 +142,4 @@ bot.launch();
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
+console.log(new Date(), 'Started')
