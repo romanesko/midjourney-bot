@@ -17,6 +17,7 @@ AUTH_PASSWORD=
 
 ```bash
 npm install pm2 -g
+npm run build
 cd dist
 pm2 start app.js
 ```
